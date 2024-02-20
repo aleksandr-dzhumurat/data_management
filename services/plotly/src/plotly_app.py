@@ -40,10 +40,10 @@ fig = px.bar(df, x='dt', y='uniq_users',
 
 
 app.layout = html.Div(children=[
-    html.H1(children='EventAlly analytics'),
+    html.H1(children='Awesome analytics'),
 
     html.Div(children='''
-        Tg bot uniq users by hour
+        Uniq users by hour
     '''),
 
     dcc.Graph(
@@ -51,7 +51,7 @@ app.layout = html.Div(children=[
         figure=fig
     ),
 
-        # Interval component to trigger updates every 5 minutes
+    # Interval component to trigger updates every 5 minutes
     Interval(
         id='interval-component',
         interval=5*60*1000,  # in milliseconds
@@ -70,8 +70,8 @@ def update_graph(n):
     df['dt'] = pd.to_datetime(df['dt'])
 
     updated_fig = px.bar(df, x='dt', y='uniq_users',
-                         labels={'num_users': 'Number of Users', 'hour': 'Hour'},
-                         title='Number of Users per Hour')
+                         labels={'num_users': 'Number of Users', 'dt': 'dt'},
+                         title='Uniq users per day')
 
     return updated_fig
 

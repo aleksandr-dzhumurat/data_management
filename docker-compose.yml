@@ -9,7 +9,8 @@ services:
     build:
       context: ./services/postgres_host
     restart: always
-    ports: ["5433:5432"]
+    ports:
+      - 5433:5432
     container_name: postgres_host
     env_file:
       - services/postgres_host/.env
@@ -22,7 +23,8 @@ services:
   redis_host:
     image: redis:3.2-alpine
     restart: always
-    ports: ["6380:6379"]
+    ports:
+      - 6380:6379
     container_name: redis_host
     networks:
       prj_network:
@@ -33,7 +35,8 @@ services:
   mongo:
     image: mongo:4.1.6
     restart: always
-    ports: ["27018:27017"]
+    ports:
+      - 27018:27017
     container_name: mongo_host
     networks:
       prj_network:
@@ -57,7 +60,7 @@ services:
     networks:
       - prj_network
     ports:
-      - "5001:5000"
+      - 5001:5000
     command: python3 src/simple_service.py
   jupyter-app:
     image: adzhumurat/workshop-image:release-20.12.7
@@ -65,7 +68,6 @@ services:
       - services/data_client/.env
     volumes:
       - ./data_store:/usr/share/data_store
-      - ./services/data_client/app:/srv/data_client/app
       - ./jupyter_notebooks:/srv/src/jupyter_notebooks
     container_name: jupyter-client
     ports:

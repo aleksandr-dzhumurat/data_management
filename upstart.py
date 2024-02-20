@@ -4,9 +4,6 @@ from subprocess import call
 
 PROJECT_NAME = 'data-mng'
 MAIN_SERVICE_NAME = 'service-app'
-# переменная среды SOURCE_DATA используется в docker-compose
-# os.environ['SOURCE_DATA'] = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'data_store')
-# os.environ['JUPYTER_NOTEBOOKS'] = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'jupyter_notebooks')
 SPARK_DIR = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'spark_example')
 
 docker_compose = f"""docker-compose --project-name {PROJECT_NAME} \
