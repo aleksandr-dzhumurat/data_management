@@ -21,22 +21,22 @@ if __name__ == '__main__':
     clear_sh_command = 'docker rm -f mongo_host && docker rm -f redis_host && docker rm -f postgres_host'
     if args.scenario in ('bash', ):
         sh_command = f'{simple_run} {args.scenario}'
-    if args.scenario == 'prepare_dirs':
+    if args.scenario == 'build':
         sh_command = """mkdir -p data/pg_data || true && \
             mkdir -p data/redis_data || true && \
-            mkdir -p data/mongo_data || true
+            mkdir -p data/mongo_data || true && \
+            mkdir -p data/metabase_data || true && \
+            python3 upstart.py -s build
         """
-    elif args.scenario == 'mongo':
-        sh_command = f'{docker_compose} run {docker_compose_postfix} "/usr/bin/mongo" mongo_host:27017'
     elif args.scenario == 'mongoimport':
-        sh_command = f'{docker_compose} run {docker_compose_postfix} "/usr/bin/mongoimport" --host mongo_host --port 27017 --db movie --collection tags --file /usr/share/data_store/raw_data/tags.json'
+        sh_command = f'{docker_compose} run {docker_compose_postfix} "/usr/bin/mongoimport" --host mongo --port 27017 --db movie --collection tags --file /usr/share/data_store/raw_data/tags.json'
     elif args.scenario == 'clear':
         sh_command = clear_sh_command
     elif args.scenario == 'load':
         sh_command = f'{docker_compose} run {docker_compose_postfix} "python3" src/scripts/load_data.py -s load'
     elif args.scenario == 'bash':
         sh_command = f'{docker_compose} run {docker_compose_postfix} bash'
-    elif args.scenario in ('metabase', 'plotly', 'altair', 'down', 'service-app', 'jupyter-app'):
+    elif args.scenario in ('metabase', 'plotly', 'altair', 'down', 'service-app', 'jupyter-app', 'mongo'):
         sh_command = f"{docker_compose} up {args.scenario}"
     elif args.scenario == 'psql':
         sh_command = f'{docker_compose} run --rm {docker_compose_postfix} "psql" -h postgres_host -U postgres'

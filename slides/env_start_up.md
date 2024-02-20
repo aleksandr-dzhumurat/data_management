@@ -125,7 +125,7 @@ docker run hello-world
 
 Для начала запустим сборку базового образа
 ```shell
-docker-compose build base_image
+python3 upstart.py -s build
 ```
 
 ### Автоматизация разворачивания среды с помощью docker-compose

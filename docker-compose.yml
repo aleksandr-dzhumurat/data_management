@@ -30,7 +30,7 @@ services:
           - redis_host
     volumes:
       - ./${DATA_DIR}/redis_data:/data
-  mongo_host:
+  mongo:
     image: mongo:4.1.6
     restart: always
     ports: ["27018:27017"]
@@ -46,7 +46,7 @@ services:
     depends_on:
       - postgres_host
       - redis_host
-      - mongo_host
+      - mongo
     env_file:
       - ./.env
     volumes:
@@ -86,6 +86,8 @@ services:
       - 3000:3000
     env_file:
       - services/metabase/.env
+    volumes:
+      - ./${DATA_DIR}/metabase_data:/metabase-data
     depends_on:
       - postgres_host
     container_name: metabase
