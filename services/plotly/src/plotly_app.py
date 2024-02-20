@@ -2,7 +2,6 @@ import os
 
 import pandas as pd
 from sqlalchemy import create_engine
-# from dash import *
 import plotly.express as px
 from dash import Dash, html, dcc, Output, Input
 from dash_core_components import Interval
@@ -14,7 +13,6 @@ db_params = {
     "user": os.environ['POSTGRES_USER'],
     "password": os.environ['POSTGRES_PASSWORD']
 }
-# db_params.update({"host": "64.226.98.30"})
 
 engine = create_engine(f"postgresql+psycopg2://{db_params['user']}:{db_params['password']}@{db_params['host']}:{db_params['port']}")
 print('Connected to postgres')
