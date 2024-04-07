@@ -68,7 +68,7 @@ services:
       - services/data_client/.env
     volumes:
       - ./data_store:/usr/share/data_store
-      - ./jupyter_notebooks:/srv/src/jupyter_notebooks
+      - ./jupyter_notebooks:/srv/data_client/jupyter_notebooks
     container_name: jupyter-client
     ports:
       - 8889:8888
@@ -124,6 +124,59 @@ services:
     container_name: plotly
     networks:
       - prj_network
+  mlflow:
+    build:
+      context: ./services/mlflow
+    depends_on:
+      - minio
+      - mlflow-jupyter
+    env_file:
+      - .env
+    volumes:
+      - ./data_store/mlflow:/srv/mlflow
+      - ./services/mlflow/src:/srv/src
+    container_name: mlflow_container_ui
+    ports:
+      - 8000:8000
+    networks:
+      - prj_network
+    command: >
+      serve
+  mlflow-jupyter:
+    build:
+      context: ./services/mlflow
+    env_file:
+      - .env
+    volumes:
+      - ./data_store:/srv/data
+      - ./jupyter_notebooks:/srv/src/jupyter_notebooks
+    container_name: mlflow_jupyter
+    ports:
+      - 8890:8888
+    networks:
+      - prj_network
+    command: >
+      jupyter notebook src/jupyter_notebooks
+      --ip 0.0.0.0
+      --port 8888
+      --allow-root
+      --no-browser
+      --NotebookApp.token=''
+      --NotebookApp.password=''
+  minio:
+    build:
+      context: ./services/minio
+    env_file:
+      - .env
+    volumes:
+      - ./data_store/minio:/data
+    networks:
+      prj_network:
+        aliases:
+          - s3
+    container_name: s3
+    ports:
+      - 9001:9001
 networks:
   prj_network:
     driver: bridge

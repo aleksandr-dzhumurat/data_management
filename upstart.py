@@ -23,6 +23,8 @@ if __name__ == '__main__':
             mkdir -p data/redis_data || true && \
             mkdir -p data/mongo_data || true && \
             mkdir -p data/metabase_data || true && \
+            mkdir -p data/minio || true && \
+            mkdir -p data/mlflow || true && \
             python3 upstart.py -s build
         """
     elif args.scenario == 'mongoimport':
@@ -33,7 +35,7 @@ if __name__ == '__main__':
         sh_command = f'{docker_compose} run {docker_compose_postfix} "python3" src/scripts/load_data.py -s load'
     elif args.scenario == 'bash':
         sh_command = f'{docker_compose} run {docker_compose_postfix} bash'
-    elif args.scenario in ('metabase', 'plotly', 'altair', 'down', 'service-app', 'jupyter-app', 'mongo'):
+    elif args.scenario in ('metabase', 'plotly', 'altair', 'down', 'service-app', 'jupyter-app', 'mongo', 'mlflow'):
         sh_command = f"{docker_compose} up {args.scenario}"
     elif args.scenario == 'psql':
         sh_command = f'{docker_compose} run --rm {docker_compose_postfix} "psql" -h postgres_host -U postgres'

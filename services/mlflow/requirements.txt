@@ -1,0 +1,8 @@
+numpy
+scipy
+jupyter
+jupyter-client
+implicit
+mlflow[pipelines]
+minio
+boto3
