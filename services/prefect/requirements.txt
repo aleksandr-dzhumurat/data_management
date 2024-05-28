@@ -1,0 +1,5 @@
+prefect==2.17.1
+psycopg2-binary
+asyncpg
+pandas
+prefect-email

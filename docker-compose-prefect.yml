@@ -1,0 +1,79 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:13.3
+    container_name: postgres
+    env_file:
+      - ./.env
+    ports:
+      - 5432:5432
+    expose:
+      - 5432
+    networks:
+      - prj_network
+    volumes:
+      - ./data_store/postgres_data:/var/lib/postgresql/data
+    user: "501"
+
+  hasura:
+    image: hasura/graphql-engine:v2.39.2
+    environment:
+      - HASURA_GRAPHQL_DATABASE_URL=postgres://prefect:prefect@postgres:5432/prefect
+      - HASURA_GRAPHQL_ENABLE_CONSOLE=true
+      - HASURA_GRAPHQL_DEV_MODE=true
+    ports:
+      - 8080:8080
+    networks:
+      - prj_network
+    depends_on:
+      - postgres
+
+  prefect-server:
+    build:
+      context: ./services/prefect
+    # image: prefecthq/prefect:2.11.5-python3.11
+    container_name: prefect_api
+    entrypoint: ["/opt/prefect/entrypoint.sh", "prefect", "server", "start"]
+    env_file:
+      - ./.env
+    environment:
+      # - PREFECT_API_URL=http://0.0.0.0:4200
+      # - PREFECT_SERVER_API_HOST=0.0.0.0
+      # - PREFECT_UI_URL=http://127.0.0.1:4200/api
+      # - PREFECT_SERVER__DB_CONNECTION_URL=postgresql://prefect:prefect@postgres:5432/prefect
+      - PREFECT_API_DATABASE_CONNECTION_URL=postgresql+asyncpg://prefect:prefect@postgres:5432/prefect
+    ports:
+      - 4200:4200
+    networks:
+      - prj_network
+    depends_on:
+      - postgres
+      - hasura
+  prefect-cli:
+    build:
+      context: ./services/prefect
+    entrypoint: "bash"
+    working_dir: "/root/flows"
+    volumes:
+      - ./prefect_flows:/root/flows
+      - /Users/username/Downloads/data:/srv/data
+    environment:
+      - PREFECT_API_URL=http://prefect_api:4200/api
+    networks:
+      - prj_network
+  
+  # minio:
+  #   image: minio/minio:latest
+  #   entrypoint: ["minio", "server", "--address", "0.0.0.0:9000", "--console-address", "0.0.0.0:9001", "/data"]
+  #   volumes:
+  #     - "minio:/data"
+  #   ports:
+  #     - 9000:9000
+  #     - 9001:9001
+
+networks:
+  prj_network:
+    driver: bridge
+    driver_opts:
+      com.docker.network.driver.mtu: 1450

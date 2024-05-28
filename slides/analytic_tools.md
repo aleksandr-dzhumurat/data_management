@@ -8,7 +8,7 @@ After clonning this repositor, build docker image
 python3 upstart.py -s build
 ```
 
-Download [user_item_viewsю.zip](https://drive.google.com/file/d/1g9AJx3ab4yDtpcew97qxcvvW-3ABz6B7/view?usp=drive_link) and move to [data_store](../data_store)
+Download [user_item_views.zip](https://drive.google.com/file/d/1g9AJx3ab4yDtpcew97qxcvvW-3ABz6B7/view?usp=drive_link) and move to [data_store](../data_store)
 
 Extract files
 

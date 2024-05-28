@@ -15,7 +15,7 @@ if __name__ == '__main__':
     parser = ArgumentParser()
     parser.add_argument('-s', '--scenario', dest='scenario', required=True, help='Сценарий работы')
     args = parser.parse_args()
-    clear_sh_command = 'docker rm -f mongo_host && docker rm -f redis_host && docker rm -f postgres_host'
+    clear_sh_command = 'docker rm -f mongo_host && docker rm -f redis_host && docker rm -f postgres_host && docker rm -f s3 && docker rm -f mlflow_container_ui && docker rm -f mlflow_jupyter'
     if args.scenario in ('bash', ):
         sh_command = f'{simple_run} {args.scenario}'
     if args.scenario == 'build':
